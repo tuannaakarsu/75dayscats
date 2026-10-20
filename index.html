@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="tr">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#101114">
+  <meta name="description"
+    content="75 günlük hedef takip meydan okuması. Her gün hedeflerini tamamla, pixel-art kedini ortaya çıkar.">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" href="./icons/cat.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="./icons/cat.svg">
+  <link rel="stylesheet" href="./style.css">
+  <title>75 DAYS — Pixel Cat</title>
+</head>
+
+<body>
+  <main class="app-shell">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">PERSONAL QUEST / 75 DAYS</p>
+        <h1>75 <span>DAYS</span></h1>
+        <p class="subtitle">Small steps. One complete cat.</p>
+      </div>
+      <button class="icon-button" id="settings-open" aria-label="Ayarları aç" title="Ayarlar">⚙</button>
+    </header>
+
+    <section class="stats-row" aria-label="İlerleme">
+      <div class="stat-card"><span class="stat-label">TAMAMLANAN GÜN</span><strong id="completed-days">0</strong></div>
+      <div class="stat-card"><span class="stat-label">KALAN GÜN</span><strong id="remaining-days">75</strong></div>
+      <div class="stat-card"><span class="stat-label">İLERLEME</span><strong id="progress-percent">0%</strong></div>
+    </section>
+
+    <section class="panel today-panel">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow" id="day-kicker">DAY 01 / 75</p>
+          <h2>Today's checklist</h2>
+        </div>
+        <span class="count-pill" id="task-count">0 / 0</span>
+      </div>
+      <div class="day-navigation">
+        <button class="nav-button" id="prev-day" aria-label="Önceki gün">←</button>
+        <div class="date-label">
+          <strong id="date-title">1. Gün</strong>
+          <span id="date-subtitle">Tarih yükleniyor</span>
+        </div>
+        <button class="nav-button" id="next-day" aria-label="Sonraki gün">→</button>
+      </div>
+      <div id="task-list" class="task-list"></div>
+      <form id="add-task-form" class="add-task-form">
+        <label class="sr-only" for="new-task">Yeni hedef</label>
+        <input id="new-task" maxlength="80" placeholder="Yeni bir hedef ekle..." autocomplete="off" required>
+        <button type="submit" class="add-button" aria-label="Hedef ekle">+</button>
+      </form>
+      <p class="hint" id="completion-hint">Günün pikselini açmak için tüm hedefleri tamamla.</p>
+      <div id="day-complete-message" class="success-message" hidden>✦ BUGÜNÜN PİKSELİ KAZANILDI ✦</div>
+    </section>
+
+    <section class="panel cat-panel">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">YOUR PROGRESS, PIXEL BY PIXEL</p>
+          <h2>The pixel cat</h2>
+        </div>
+        <span class="count-pill" id="pixel-count">0 / 75</span>
+      </div>
+      <p class="panel-copy">Her gün bütün hedeflerini bitir. Bir piksel daha aç ve kedini tamamla.</p>
+      <div id="pixel-cat" class="pixel-cat" role="img" aria-label="75 günlük ilerlemeni gösteren piksel kedi"></div>
+      <div class="legend"><span class="legend-dot filled"></span> Tamamlanan gün <span class="legend-dot empty"></span>
+        Bekleyen gün</div>
+      <div class="progress-track" aria-label="Genel ilerleme">
+        <div id="progress-bar" class="progress-fill"></div>
+      </div>
+      <p class="cat-footer" id="cat-footer">Her büyük şey küçük bir adımla başlar.</p>
+    </section>
+
+    <section class="panel notes-panel">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">DAILY LOG</p>
+          <h2>Today's note</h2>
+        </div>
+      </div>
+      <label class="sr-only" for="daily-note">Günlük not</label>
+      <textarea id="daily-note" rows="3" maxlength="500"
+        placeholder="Bugün nasıl geçti? Küçük bir not bırak..."></textarea>
+      <p class="save-status" id="save-status" aria-live="polite">Değişiklikler otomatik kaydedilir.</p>
+    </section>
+
+    <footer class="app-footer">
+      <span>MADE FOR YOUR FUTURE SELF</span>
+      <button id="export-data" class="text-button">Verilerimi yedekle ↗</button>
+    </footer>
+  </main>
+
+  <dialog id="settings-dialog" class="settings-dialog">
+    <form method="dialog" class="dialog-header">
+      <div>
+        <p class="eyebrow">PERSONAL SETTINGS</p>
+        <h2>Ayarlar</h2>
+      </div>
+      <button class="icon-button" aria-label="Ayarları kapat">×</button>
+    </form>
+    <div class="settings-content">
+      <label for="start-date">Meydan okuma başlangıç tarihi</label>
+      <input type="date" id="start-date">
+      <p class="hint">Başlangıç tarihini değiştirmek günlerin takvim tarihlerini yeniden hesaplar; kayıtların gün
+        numaralarına bağlı kalır.</p>
+      <label for="goal-template">Başlangıç hedefleri</label>
+      <p class="hint">Hedef ekleyebilir, silebilir veya isimlerini düzenleyebilirsin. Bir günün pikseli, o gün için
+        listedeki bütün hedefler tamamlandığında açılır.</p>
+      <button id="reset-data" class="danger-button" type="button">Tüm verileri sıfırla</button>
+      <p class="hint">Sıfırlama geri alınamaz. İstersen önce yedek al.</p>
+    </div>
+    <div class="dialog-actions"><button class="primary-button" id="save-settings" type="button">Kaydet</button></div>
+  </dialog>
+
+  <input type="file" id="import-file" accept="application/json,.json" hidden>
+  <script src="./app.js" defer></script>
+</body>
+
+</html>

@@ -1,0 +1,19 @@
+{
+  "name": "75 Days — Pixel Cat",
+  "short_name": "Pixel Cat 75",
+  "description": "75 günlük hedef takip meydan okuması",
+  "lang": "tr",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#101114",
+  "theme_color": "#101114",
+  "icons": [
+    {
+      "src": "./icons/cat.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
