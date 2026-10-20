@@ -4,25 +4,29 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#101114">
+  <meta name="theme-color" content="#150f1d">
   <meta name="description"
-    content="75 günlük hedef takip meydan okuması. Her gün hedeflerini tamamla, pixel-art kedini ortaya çıkar.">
+    content="Kişisel hedef takip meydan okuması. Başlangıç ve bitiş tarihlerini belirle, her gün hedeflerini tamamla, piksel kedini ortaya çıkar.">
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="icon" href="./icons/cat.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="./icons/cat.svg">
   <link rel="stylesheet" href="./style.css">
-  <title>75 DAYS — Pixel Cat</title>
+  <title>Pixel Cat — Quest</title>
 </head>
 
 <body>
   <main class="app-shell">
     <header class="topbar">
       <div>
-        <p class="eyebrow">PERSONAL QUEST / 75 DAYS</p>
-        <h1>75 <span>DAYS</span></h1>
-        <p class="subtitle">Small steps. One complete cat.</p>
+        <p class="eyebrow">PERSONAL QUEST / <span id="hero-total-days">75</span> DAYS</p>
+        <h1><span id="header-total-days">75</span> <span>DAYS</span></h1>
+        <p class="subtitle">Küçük adımlarla bir kedi oluşturabilirsinizzz.</p>
       </div>
-      <button class="icon-button" id="settings-open" aria-label="Ayarları aç" title="Ayarlar">⚙</button>
+      <div class="topbar-actions">
+        <button class="icon-button" id="share-quest-btn" aria-label="Meydan okumayı paylaş"
+          title="Arkadaşına Gönder">🔗</button>
+        <button class="icon-button" id="settings-open" aria-label="Ayarları aç" title="Ayarlar">⚙</button>
+      </div>
     </header>
 
     <section class="stats-row" aria-label="İlerleme">
@@ -61,18 +65,45 @@
       <div class="section-heading">
         <div>
           <p class="eyebrow">YOUR PROGRESS, PIXEL BY PIXEL</p>
-          <h2>The pixel cat</h2>
+          <div class="cat-title-wrap">
+            <h2>The pixel cat</h2>
+            <span id="cat-badge" class="badge">🐾 KLASİK</span>
+          </div>
         </div>
         <span class="count-pill" id="pixel-count">0 / 75</span>
       </div>
-      <p class="panel-copy">Her gün bütün hedeflerini bitir. Bir piksel daha aç ve kedini tamamla.</p>
-      <div id="pixel-cat" class="pixel-cat" role="img" aria-label="75 günlük ilerlemeni gösteren piksel kedi"></div>
-      <div class="legend"><span class="legend-dot filled"></span> Tamamlanan gün <span class="legend-dot empty"></span>
-        Bekleyen gün</div>
+
+      <div class="cat-meta-bar">
+        <span class="cat-current-name" id="cat-name">Klasik Oturan Kedi</span>
+        <button type="button" class="action-chip" id="randomize-cat-btn" title="Farklı rastgele bir kedi ata">
+          🎲 Başka Kedi Seç
+        </button>
+      </div>
+
+      <p class="panel-copy" id="cat-description">Her gün bütün hedeflerini bitir. Bir piksel daha aç ve kedini tamamla.
+      </p>
+
+      <div id="pixel-cat" class="pixel-cat" role="img" aria-label="İlerlemeni gösteren piksel kedi"></div>
+
+      <div class="legend">
+        <span class="legend-dot filled"></span> Tamamlanan gün
+        <span class="legend-dot empty"></span> Bekleyen gün
+      </div>
+
       <div class="progress-track" aria-label="Genel ilerleme">
         <div id="progress-bar" class="progress-fill"></div>
       </div>
       <p class="cat-footer" id="cat-footer">Her büyük şey küçük bir adımla başlar.</p>
+
+      <div id="quest-complete-card" class="quest-complete-card" hidden>
+        <div class="quest-complete-title">🎉 TEBRİKLER! TÜM GÜNLER BİTTİ</div>
+        <p class="quest-complete-body">Kedini eksiksiz tamamladın. Şimdi arkadaşlarınla paylaşabilir veya yeni bir
+          kediyle sıradaki hedefine başlayabilirsin!</p>
+        <div class="quest-complete-actions">
+          <button type="button" id="complete-share-btn" class="primary-button-sm">Arkadaşına Gönder 📤</button>
+          <button type="button" id="complete-new-cat-btn" class="secondary-button-sm">Yeni Kediyle Başla 🐾</button>
+        </div>
+      </div>
     </section>
 
     <section class="panel notes-panel">
@@ -90,10 +121,13 @@
 
     <footer class="app-footer">
       <span>MADE FOR YOUR FUTURE SELF</span>
-      <button id="export-data" class="text-button">Verilerimi yedekle ↗</button>
+      <div class="footer-links">
+        <button id="share-footer-btn" class="text-button">Arkadaşına at ↗</button>
+      </div>
     </footer>
   </main>
 
+  <!-- Ayarlar Modalı -->
   <dialog id="settings-dialog" class="settings-dialog">
     <form method="dialog" class="dialog-header">
       <div>
@@ -103,20 +137,90 @@
       <button class="icon-button" aria-label="Ayarları kapat">×</button>
     </form>
     <div class="settings-content">
-      <label for="start-date">Meydan okuma başlangıç tarihi</label>
-      <input type="date" id="start-date">
-      <p class="hint">Başlangıç tarihini değiştirmek günlerin takvim tarihlerini yeniden hesaplar; kayıtların gün
-        numaralarına bağlı kalır.</p>
-      <label for="goal-template">Başlangıç hedefleri</label>
-      <p class="hint">Hedef ekleyebilir, silebilir veya isimlerini düzenleyebilirsin. Bir günün pikseli, o gün için
-        listedeki bütün hedefler tamamlandığında açılır.</p>
+      <div class="setting-group">
+        <label for="start-date">Meydan okuma başlangıç tarihi</label>
+        <input type="date" id="start-date">
+      </div>
+
+      <div class="setting-group">
+        <label for="end-date">Meydan okuma bitiş tarihi</label>
+        <input type="date" id="end-date">
+        <div class="quick-duration-row">
+          <span class="quick-duration-label">Hızlı Süre:</span>
+          <button type="button" class="preset-btn" data-days="14">14 Gün</button>
+          <button type="button" class="preset-btn" data-days="30">30 Gün</button>
+          <button type="button" class="preset-btn" data-days="75">75 Gün</button>
+          <button type="button" class="preset-btn" data-days="100">100 Gün</button>
+        </div>
+        <p class="duration-highlight" id="duration-preview">Toplam Süre: 75 Gün</p>
+        <p class="hint">Başlangıç ve bitiş tarihini dilediğin gibi belirleyebilirsin. Tarih değiştiğinde günlerin takvim
+          karşılıkları otomatik güncellenir.</p>
+      </div>
+
+      <div class="setting-group">
+        <label for="cat-select">Piksel Kedi Modeli</label>
+        <div class="cat-select-row">
+          <select id="cat-select"></select>
+          <button type="button" class="action-chip" id="settings-random-cat-btn" title="Rastgele kedi ata">🎲
+            Rastgele</button>
+        </div>
+        <p class="hint">Her kedinin kendine has kürk rengi vardır (Sarı Sarman, Karışık Kaliko, Bembeyaz Pamuk, Altın
+          Şans vb.).</p>
+      </div>
+
+      <div class="setting-group">
+        <label>Başlangıç hedefleri</label>
+        <p class="hint">Hedef ekleyebilir, silebilir veya isimlerini düzenleyebilirsin. Bir günün pikseli, o gün için
+          listedeki bütün hedefler tamamlandığında açılır.</p>
+      </div>
+
+      <div class="setting-group backup-section">
+        <label>Veri Yedekleme ve Kurtarma</label>
+        <p class="hint">Uygulamada hesap/üyelik yoktur, tüm ilerlemen sadece bu tarayıcının hafızasında tutulur. Telefon
+          değiştirirken veya tarayıcı geçmişini temizlemeden önce kaybolmaması için yedek alabilirsin.</p>
+        <div class="backup-actions-row">
+          <button id="export-data" class="backup-btn" type="button">📥 Verileri Yedekle</button>
+          <button id="import-data-btn" class="backup-btn" type="button">📤 Yedeği Geri Yükle</button>
+        </div>
+      </div>
+
       <button id="reset-data" class="danger-button" type="button">Tüm verileri sıfırla</button>
       <p class="hint">Sıfırlama geri alınamaz. İstersen önce yedek al.</p>
     </div>
-    <div class="dialog-actions"><button class="primary-button" id="save-settings" type="button">Kaydet</button></div>
+    <div class="dialog-actions">
+      <button class="primary-button" id="save-settings" type="button">Kaydet</button>
+    </div>
+  </dialog>
+
+  <!-- Paylaşım / Arkadaşa Gönder Modalı -->
+  <dialog id="share-dialog" class="settings-dialog share-dialog">
+    <form method="dialog" class="dialog-header">
+      <div>
+        <p class="eyebrow">CHALLENGE A FRIEND</p>
+        <h2>Arkadaşına Gönder 🐾</h2>
+      </div>
+      <button class="icon-button" aria-label="Kapat">×</button>
+    </form>
+    <div class="settings-content">
+      <p class="share-dialog-desc">
+        Arkadaşın bu bağlantıyı açtığında ona <strong>rastgele farklı bir kedi</strong> atanır ve belirlediğin tarih
+        aralığıyla kendi meydan okumasını başlatabilir!
+      </p>
+      <div class="share-preview-card">
+        <div class="share-preview-cat-name" id="share-preview-cat">🎲 Arkadaşına Rastgele Kedi Atanır</div>
+        <div class="share-preview-dates" id="share-preview-dates">Süre: 75 Gün</div>
+      </div>
+      <div class="share-link-box">
+        <input type="text" id="share-url-input" readonly>
+        <button type="button" id="copy-share-url-btn" class="primary-button">Kopyala</button>
+      </div>
+      <button type="button" id="native-share-btn" class="secondary-button" hidden>Uygulamalarla Paylaş 📲</button>
+      <p class="share-copied-toast" id="share-copied-toast" hidden>✓ Bağlantı panoya kopyalandı!</p>
+    </div>
   </dialog>
 
   <input type="file" id="import-file" accept="application/json,.json" hidden>
+  <div id="toast" class="toast" hidden></div>
   <script src="./app.js" defer></script>
 </body>
 

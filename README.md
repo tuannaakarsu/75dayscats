@@ -1,18 +1,15 @@
-# 75 Days — Pixel Cat
+# Pixel Cat — Kişisel Hedef Takip Meydan Okuması
 
-Ücretsiz, mobil uyumlu bir PWA: günlük hedef listesi, 75 günlük pixel-art ilerlemesi ve günlük notlar.
+Ücretsiz, mobil uyumlu ve modern bir PWA: günlük hedef listesi, kişiselleştirilebilir başlangıç-bitiş tarihleri, rastgele atanan farklı piksel kedi modelleri ve arkadaş davet sistemi.
 
-## Özellikler
-- Hedef ekleme, silme ve adını düzenleme
-- Bir günün pikseli yalnızca listedeki bütün hedefler tamamlandığında açılır
-- 75 günlük ilerleme sayacı ve kedi ızgarası
-- Günlük notlar
-- JSON yedekleme
-- LocalStorage ile cihaz içinde kayıt
-- Service Worker ile temel çevrimdışı destek
-- GitHub Pages üzerinde ücretsiz yayımlanabilir
+## Yeni Özellikler
+- **Özelleştirilebilir Tarihler:** Başlangıç ve bitiş tarihlerini istediğin gibi seç (14 gün, 30 gün, 75 gün, 100 gün veya dilediğin özel tarih aralığı).
+- **Rastgele & Farklı Kedi Modelleri:** 6 farklı piksel kedi modeli (Klasik Oturan, Kıvrılmış Uyuyan, Yürüyen Gezgin, Gerinen Yoga Kedisi, Şans Kedisi Maneki-neko, Meraklı Kedi). Bir kedi tamamlandığında yeni bir serüvene başka bir kediyle başlanır.
+- **Tek Tıkla Rastgele Kedi Değiştirme:** Arayüzden ya da ayarlardan dilediğin zaman farklı bir kedi modeline geçiş yapabilirsin.
+- **Arkadaşına Gönder / Paylaşım:** "🔗 Arkadaşına Gönder" butonuyla link paylaş; arkadaşın linke tıkladığında ona rastgele farklı bir kedi atanır!
+- **Dinamik Piksel Ölçekleme:** Meydan okuma kaç gün sürerse sürsün (ister 14 gün, ister 30, ister 75 gün), pikseller orantılı olarak her gün adım adım açılır ve son gün kedi tamamlanır.
 
-## Yerelde çalıştırma
+## Yerelde Çalıştırma
 
 PWA özellikleri `file://` üzerinden tam çalışmaz. Proje klasöründe bir terminal aç:
 
@@ -20,21 +17,11 @@ PWA özellikleri `file://` üzerinden tam çalışmaz. Proje klasöründe bir te
 python -m http.server 8000
 ```
 
-Bilgisayarda `http://localhost:8000` adresini aç. Aynı Wi-Fi ağındaki telefondan test etmek için bilgisayarının yerel IP adresini kullanabilirsin; telefonda service worker için HTTPS gerektiğinden çevrimdışı/ana ekran özelliklerini en iyi GitHub Pages yayınıyla test edersin.
+Tarayıcında `http://localhost:8000` adresini aç.
 
-## GitHub Pages ile ücretsiz yayınlama
-1. GitHub'da yeni bir repository oluştur (ör. `pixel-cat-75`).
+## GitHub Pages ile Ücretsiz Yayınlama
+1. GitHub'da yeni bir repository oluştur (ör. `pixel-cat`).
 2. Bu klasördeki tüm dosyaları repository'nin kök dizinine yükle.
 3. Repository → **Settings** → **Pages**.
 4. **Deploy from a branch** seç; branch `main`, folder `/(root)` olsun ve kaydet.
-5. GitHub'ın verdiği HTTPS adresini telefonda aç.
-6. iPhone: Safari → Paylaş → Ana Ekrana Ekle. Android: Chrome menüsü → Uygulamayı yükle / Ana ekrana ekle.
-
-## Kayıtlarla ilgili önemli bilgi
-Veriler sadece bu cihazdaki ve bu tarayıcıdaki LocalStorage içinde tutulur. Başka cihaza otomatik senkronize olmaz; tarayıcı verilerini temizlemek kayıtları silebilir. **Verilerimi yedekle** düğmesi JSON dosyası indirir. Bu ilk sürümde içe aktarma özelliği bulunmuyor; dosyayı güvenli bir yerde sakla.
-
-## İşleyiş
-- Meydan okuma 75 gün sürer; varsayılan başlangıç tarihi uygulamanın ilk açıldığı gündür.
-- Bir günün pikseli için en az bir hedef olmalı ve o gün tüm hedefler tamamlanmalıdır.
-- Hedef listesi ortak olduğundan bir hedef eklemek, önceki günler de dahil olmak üzere tüm günlerin tamamlanma koşulunu etkiler. Hedef listesini sık değiştirmemek önerilir.
-- Bu sürüm kişisel kullanım için tasarlanmıştır; hesap veya sunucu tarafı yedekleme yoktur.
+5. GitHub'ın verdiği HTTPS adresini telefonda aç ve ana ekrana ekle.
