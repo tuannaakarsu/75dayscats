@@ -7,13 +7,14 @@
     { id: "move", name: "30 dakika hareket et" }
   ];
 
-  // Renkli, Sarı, Beyaz ve Karışık Kedi Modelleri (15x15 Izgarada)
+  // 15x15 Izgarada Detaylı Kawaii Kedi Modelleri (Gözler, Burun, Ağız, Kulaklar, Allıklar ve Bıyıklar)
   const CAT_MODELS = [
     {
       id: "ginger",
       name: "Sarı Sarman Kedi",
       typeLabel: "Sarı Kedi",
       badge: "🐱 SARMAN",
+      quote: "Sarı tüyleri, zümrüt gözleri ve minik burnuyla hedeflerini bekliyor!",
       completeQuote: "✦ GÖREV TAMAMLANDI — SARMAN SENİ TEBRİK EDİYORR... ✦",
       theme: {
         primary: "#FFA726",
@@ -23,26 +24,41 @@
         badgeBorder: "rgba(255, 167, 38, 0.55)",
         badgeColor: "#FFE082"
       },
-      colorFn: (x, y) => {
-        // Kulak içi hafif pembe-turuncu, göğüs krem sarı, gövde canlı sarı
-        if ((y === 0 && (x === 4 || x === 10)) || (y === 1 && (x === 4 || x === 10))) return "#FF8A65";
-        if (y >= 5 && y <= 8 && x >= 4 && x <= 6) return "#FFE082";
-        if (y >= 10) return "#FFB74D";
-        return "#FFA726";
+      palette: {
+        fur: "#FFA726",
+        furDark: "#FB8C00",
+        eye: "#00C9A7",       // Zümrüt yeşili canlı gözler
+        nose: "#FF5252",      // Pembe burun
+        mouth: "#D90429",     // Sevimli ağız çizgisi
+        ear: "#FFB4A2",       // Kulak içi pembe
+        blush: "#FFAB91",     // Yanak allığı
+        whisker: "#FFF8E1",   // Bıyık telleri
+        chest: "#FFF8E1",     // Göğüs beyazı/krem
+        paw: "#FFE082"        // Patiler
       },
-      rows: [
-        { y: 0, xs: [4, 10] },
-        { y: 1, xs: [3, 4, 10, 11] },
-        { y: 2, xs: [2, 3, 4, 5, 9, 10, 11, 12] },
-        { y: 3, xs: [2, 3, 4, 5, 6, 8, 9, 10] },
-        { y: 4, xs: [1, 2, 3, 4, 5, 6, 7, 8] },
-        { y: 5, xs: [1, 2, 3, 4, 5, 6, 7, 8] },
-        { y: 6, xs: [1, 2, 3, 4, 5, 6, 7, 8] },
-        { y: 7, xs: [2, 3, 4, 5, 6, 7, 8] },
-        { y: 8, xs: [3, 4, 5, 6, 7, 8, 9] },
-        { y: 9, xs: [4, 5, 6, 7, 8, 9] },
-        { y: 10, xs: [4, 5, 6, 7, 8] },
-        { y: 11, xs: [3, 4, 5, 6] }
+      cells: [
+        // Kulaklar
+        { x: 3, y: 1, f: "fur" }, { x: 11, y: 1, f: "fur" },
+        { x: 2, y: 2, f: "fur" }, { x: 3, y: 2, f: "ear" }, { x: 4, y: 2, f: "fur" },
+        { x: 10, y: 2, f: "fur" }, { x: 11, y: 2, f: "ear" }, { x: 12, y: 2, f: "fur" },
+        // Alın ve Baş
+        { x: 2, y: 3, f: "fur" }, { x: 3, y: 3, f: "fur" }, { x: 4, y: 3, f: "fur" }, { x: 5, y: 3, f: "fur" }, { x: 6, y: 3, f: "fur" }, { x: 7, y: 3, f: "furDark" }, { x: 8, y: 3, f: "fur" }, { x: 9, y: 3, f: "fur" }, { x: 10, y: 3, f: "fur" }, { x: 11, y: 3, f: "fur" }, { x: 12, y: 3, f: "fur" },
+        // Gözler
+        { x: 2, y: 4, f: "fur" }, { x: 3, y: 4, f: "fur" }, { x: 4, y: 4, f: "eye" }, { x: 5, y: 4, f: "eye" }, { x: 6, y: 4, f: "fur" }, { x: 7, y: 4, f: "fur" }, { x: 8, y: 4, f: "fur" }, { x: 9, y: 4, f: "eye" }, { x: 10, y: 4, f: "eye" }, { x: 11, y: 4, f: "fur" }, { x: 12, y: 4, f: "fur" },
+        // Burun, Allık ve Bıyık
+        { x: 1, y: 5, f: "whisker" }, { x: 2, y: 5, f: "fur" }, { x: 3, y: 5, f: "blush" }, { x: 4, y: 5, f: "fur" }, { x: 5, y: 5, f: "fur" }, { x: 6, y: 5, f: "fur" }, { x: 7, y: 5, f: "nose" }, { x: 8, y: 5, f: "fur" }, { x: 9, y: 5, f: "fur" }, { x: 10, y: 5, f: "fur" }, { x: 11, y: 5, f: "blush" }, { x: 12, y: 5, f: "fur" }, { x: 13, y: 5, f: "whisker" },
+        // Ağız ve Bıyık Altı
+        { x: 2, y: 6, f: "whisker" }, { x: 3, y: 6, f: "fur" }, { x: 4, y: 6, f: "fur" }, { x: 5, y: 6, f: "fur" }, { x: 6, y: 6, f: "mouth" }, { x: 7, y: 6, f: "mouth" }, { x: 8, y: 6, f: "mouth" }, { x: 9, y: 6, f: "fur" }, { x: 10, y: 6, f: "fur" }, { x: 11, y: 6, f: "fur" }, { x: 12, y: 6, f: "whisker" },
+        // Çene ve Göğüs
+        { x: 4, y: 7, f: "fur" }, { x: 5, y: 7, f: "chest" }, { x: 6, y: 7, f: "chest" }, { x: 7, y: 7, f: "chest" }, { x: 8, y: 7, f: "chest" }, { x: 9, y: 7, f: "chest" }, { x: 10, y: 7, f: "fur" },
+        // Gövde
+        { x: 3, y: 8, f: "fur" }, { x: 4, y: 8, f: "fur" }, { x: 5, y: 8, f: "chest" }, { x: 6, y: 8, f: "chest" }, { x: 7, y: 8, f: "chest" }, { x: 8, y: 8, f: "chest" }, { x: 9, y: 8, f: "chest" }, { x: 10, y: 8, f: "fur" }, { x: 11, y: 8, f: "fur" },
+        // Gövde & Ön Patiler
+        { x: 3, y: 9, f: "fur" }, { x: 4, y: 9, f: "fur" }, { x: 5, y: 9, f: "paw" }, { x: 6, y: 9, f: "paw" }, { x: 7, y: 9, f: "chest" }, { x: 8, y: 9, f: "paw" }, { x: 9, y: 9, f: "paw" }, { x: 10, y: 9, f: "fur" }, { x: 11, y: 9, f: "fur" },
+        // Alt Taban & Patiler
+        { x: 2, y: 10, f: "fur" }, { x: 3, y: 10, f: "fur" }, { x: 4, y: 10, f: "paw" }, { x: 5, y: 10, f: "paw" }, { x: 6, y: 10, f: "fur" }, { x: 7, y: 10, f: "fur" }, { x: 8, y: 10, f: "paw" }, { x: 9, y: 10, f: "paw" }, { x: 10, y: 10, f: "fur" }, { x: 11, y: 10, f: "fur" }, { x: 12, y: 10, f: "fur" },
+        // Kuyruk
+        { x: 13, y: 9, f: "fur" }, { x: 13, y: 8, f: "fur" }, { x: 12, y: 7, f: "fur" }
       ]
     },
     {
@@ -50,6 +66,7 @@
       name: "Bembeyaz Pamuk Kedi",
       typeLabel: "Beyaz Kedi",
       badge: "🤍 PAMUK",
+      quote: "Huzurla kıvrılmış, pembe burnu ve masum yüzüyle uykuda!",
       completeQuote: "✦ GÖREV TAMAMLANDI — PAMUK SENİ TEBRİK EDİYORR... ✦",
       theme: {
         primary: "#FFFFFF",
@@ -59,22 +76,38 @@
         badgeBorder: "rgba(255, 255, 255, 0.45)",
         badgeColor: "#FFFFFF"
       },
-      colorFn: (x, y) => {
-        // Kulak içi tatlı pembe, geri kalan pürüzsüz saf beyaz
-        if (y === 4 && (x === 10 || x === 13)) return "#FFB6C1";
-        if (y === 5 && x === 11) return "#FFAAA6"; // burun
-        return "#FFFFFF";
+      palette: {
+        fur: "#FFFFFF",
+        furDark: "#E2EAFC",
+        eye: "#6C757D",       // Huzurlu kapalı hilal gözler
+        nose: "#FF758F",      // Tatlı pembe burun
+        mouth: "#FF8FA3",     // Gülümseyen minik ağız
+        ear: "#FFCCD5",       // Şeker pembesi kulak içi
+        blush: "#FFCCD5",     // Yanak allığı
+        whisker: "#D7E3FC",   // Narin bıyıklar
+        chest: "#FFFFFF",
+        paw: "#FFCCD5"
       },
-      rows: [
-        { y: 3, xs: [10, 13] },
-        { y: 4, xs: [9, 10, 13, 14] },
-        { y: 5, xs: [8, 9, 10, 11, 12, 13, 14] },
-        { y: 6, xs: [4, 5, 6, 7, 8, 9, 10, 11, 12, 13] },
-        { y: 7, xs: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] },
-        { y: 8, xs: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11] },
-        { y: 9, xs: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] },
-        { y: 10, xs: [2, 3, 4, 5, 6, 7, 8, 9] },
-        { y: 11, xs: [3, 4, 5, 6, 7] }
+      cells: [
+        // Kulaklar
+        { x: 10, y: 2, f: "fur" }, { x: 13, y: 2, f: "fur" },
+        { x: 9, y: 3, f: "fur" }, { x: 10, y: 3, f: "ear" }, { x: 13, y: 3, f: "ear" }, { x: 14, y: 3, f: "fur" },
+        // Baş Üstü
+        { x: 8, y: 4, f: "fur" }, { x: 9, y: 4, f: "fur" }, { x: 10, y: 4, f: "fur" }, { x: 11, y: 4, f: "fur" }, { x: 12, y: 4, f: "fur" }, { x: 13, y: 4, f: "fur" }, { x: 14, y: 4, f: "fur" },
+        // Uyuyan Gözler
+        { x: 8, y: 5, f: "fur" }, { x: 9, y: 5, f: "eye" }, { x: 10, y: 5, f: "eye" }, { x: 11, y: 5, f: "fur" }, { x: 12, y: 5, f: "eye" }, { x: 13, y: 5, f: "eye" }, { x: 14, y: 5, f: "fur" },
+        // Burun, Allık ve Bıyık
+        { x: 7, y: 6, f: "whisker" }, { x: 8, y: 6, f: "blush" }, { x: 9, y: 6, f: "fur" }, { x: 10, y: 6, f: "fur" }, { x: 11, y: 6, f: "nose" }, { x: 12, y: 6, f: "fur" }, { x: 13, y: 6, f: "blush" }, { x: 14, y: 6, f: "fur" },
+        // Ağız ve Baş Altı
+        { x: 7, y: 7, f: "whisker" }, { x: 8, y: 7, f: "fur" }, { x: 9, y: 7, f: "fur" }, { x: 10, y: 7, f: "mouth" }, { x: 11, y: 7, f: "mouth" }, { x: 12, y: 7, f: "fur" }, { x: 13, y: 7, f: "fur" },
+        // Kıvrılmış Gövde & Sırt
+        { x: 4, y: 6, f: "fur" }, { x: 5, y: 6, f: "fur" }, { x: 6, y: 6, f: "fur" },
+        { x: 2, y: 7, f: "fur" }, { x: 3, y: 7, f: "fur" }, { x: 4, y: 7, f: "fur" }, { x: 5, y: 7, f: "fur" }, { x: 6, y: 7, f: "fur" },
+        { x: 1, y: 8, f: "fur" }, { x: 2, y: 8, f: "fur" }, { x: 3, y: 8, f: "fur" }, { x: 4, y: 8, f: "fur" }, { x: 5, y: 8, f: "fur" }, { x: 6, y: 8, f: "fur" }, { x: 7, y: 8, f: "fur" }, { x: 8, y: 8, f: "fur" }, { x: 9, y: 8, f: "paw" }, { x: 10, y: 8, f: "paw" },
+        // Alt Gövde ve Kıvrık Kuyruk
+        { x: 1, y: 9, f: "fur" }, { x: 2, y: 9, f: "fur" }, { x: 3, y: 9, f: "fur" }, { x: 4, y: 9, f: "fur" }, { x: 5, y: 9, f: "fur" }, { x: 6, y: 9, f: "fur" }, { x: 7, y: 9, f: "fur" }, { x: 8, y: 9, f: "fur" }, { x: 9, y: 9, f: "paw" }, { x: 10, y: 9, f: "paw" },
+        { x: 2, y: 10, f: "fur" }, { x: 3, y: 10, f: "fur" }, { x: 4, y: 10, f: "fur" }, { x: 5, y: 10, f: "fur" }, { x: 6, y: 10, f: "fur" }, { x: 7, y: 10, f: "fur" }, { x: 8, y: 10, f: "fur" }, { x: 9, y: 10, f: "fur" },
+        { x: 3, y: 11, f: "fur" }, { x: 4, y: 11, f: "fur" }, { x: 5, y: 11, f: "fur" }, { x: 6, y: 11, f: "fur" }, { x: 7, y: 11, f: "fur" }
       ]
     },
     {
@@ -82,6 +115,7 @@
       name: "Renkli Kaliko (Karışık Üç Renk)",
       typeLabel: "Karışık Kaliko",
       badge: "🐾 KALİKO",
+      quote: "Beyaz, sarı ve koyu benekleriyle neşeli bir gezgin!",
       completeQuote: "✦ GÖREV TAMAMLANDI — KALİKO SENİ KUTSUYOR... ✦",
       theme: {
         primary: "#FB8C00",
@@ -91,27 +125,39 @@
         badgeBorder: "rgba(251, 140, 0, 0.55)",
         badgeColor: "#FFB74D"
       },
-      colorFn: (x, y) => {
-        // Karışık renk: beyaz zemin, turuncu ve koyu leylak benekler
-        if (x <= 3 && y <= 5) return "#6A4078"; // Koyu benekli kuyruk
-        if (x >= 9 && y <= 5) return "#FB8C00"; // Canlı sarı/turuncu baş
-        if (x >= 6 && x <= 8 && y >= 6 && y <= 8) return "#E65100"; // Sırt beneği
-        if (x >= 4 && x <= 6 && y >= 7 && y <= 8) return "#5D376A"; // Koyu gövde beneği
-        return "#FFFFFF"; // Göğüs ve bacaklar beyaz
+      palette: {
+        fur: "#FFFFFF",
+        furOrange: "#FB8C00", // Turuncu benek
+        furDark: "#4E3459",   // Koyu vintage grape benek
+        eye: "#FFB703",       // Kehribar/bal rengi gözler
+        nose: "#FF5252",      // Pembe burun
+        mouth: "#D90429",     // Ağız
+        ear: "#FFB4A2",
+        blush: "#FFAAA6",
+        whisker: "#E2EAFC",
+        paw: "#FFFFFF"
       },
-      rows: [
-        { y: 1, xs: [1] },
-        { y: 2, xs: [1, 2] },
-        { y: 3, xs: [2, 3, 11, 14] },
-        { y: 4, xs: [3, 10, 11, 13, 14] },
-        { y: 5, xs: [3, 4, 9, 10, 11, 12, 13, 14] },
-        { y: 6, xs: [4, 5, 6, 7, 8, 9, 10, 11, 12, 13] },
-        { y: 7, xs: [4, 5, 6, 7, 8, 9, 10, 11, 12] },
-        { y: 8, xs: [4, 5, 6, 7, 8, 9, 10, 11] },
-        { y: 9, xs: [4, 5, 6, 7, 8, 9, 10] },
-        { y: 10, xs: [4, 5, 9, 10] },
-        { y: 11, xs: [4, 5, 9, 10] },
-        { y: 12, xs: [3, 4, 10, 11] }
+      cells: [
+        // Kuyruk
+        { x: 1, y: 1, f: "furDark" },
+        { x: 1, y: 2, f: "furDark" }, { x: 2, y: 2, f: "furDark" },
+        { x: 2, y: 3, f: "furDark" }, { x: 3, y: 3, f: "furDark" },
+        // Kulaklar
+        { x: 11, y: 3, f: "furOrange" }, { x: 14, y: 3, f: "furDark" },
+        { x: 3, y: 4, f: "furDark" }, { x: 10, y: 4, f: "furOrange" }, { x: 11, y: 4, f: "ear" }, { x: 13, y: 4, f: "ear" }, { x: 14, y: 4, f: "furDark" },
+        // Baş Üstü ve Gözler
+        { x: 3, y: 5, f: "fur" }, { x: 4, y: 5, f: "fur" }, { x: 9, y: 5, f: "furOrange" }, { x: 10, y: 5, f: "eye" }, { x: 11, y: 5, f: "furOrange" }, { x: 12, y: 5, f: "fur" }, { x: 13, y: 5, f: "eye" }, { x: 14, y: 5, f: "furDark" },
+        // Burun, Allık ve Bıyık
+        { x: 9, y: 6, f: "blush" }, { x: 10, y: 6, f: "fur" }, { x: 11, y: 6, f: "nose" }, { x: 12, y: 6, f: "mouth" }, { x: 13, y: 6, f: "fur" }, { x: 14, y: 6, f: "whisker" },
+        // Gövde Sırtı (Benekli)
+        { x: 4, y: 6, f: "fur" }, { x: 5, y: 6, f: "furOrange" }, { x: 6, y: 6, f: "furOrange" }, { x: 7, y: 6, f: "fur" }, { x: 8, y: 6, f: "furDark" },
+        { x: 4, y: 7, f: "fur" }, { x: 5, y: 7, f: "furOrange" }, { x: 6, y: 7, f: "furOrange" }, { x: 7, y: 7, f: "fur" }, { x: 8, y: 7, f: "furDark" }, { x: 9, y: 7, f: "fur" }, { x: 10, y: 7, f: "fur" }, { x: 11, y: 7, f: "fur" }, { x: 12, y: 7, f: "fur" },
+        { x: 4, y: 8, f: "fur" }, { x: 5, y: 8, f: "fur" }, { x: 6, y: 8, f: "fur" }, { x: 7, y: 8, f: "fur" }, { x: 8, y: 8, f: "furDark" }, { x: 9, y: 8, f: "fur" }, { x: 10, y: 8, f: "fur" }, { x: 11, y: 8, f: "fur" },
+        { x: 4, y: 9, f: "fur" }, { x: 5, y: 9, f: "fur" }, { x: 6, y: 9, f: "fur" }, { x: 7, y: 9, f: "fur" }, { x: 8, y: 9, f: "fur" }, { x: 9, y: 9, f: "fur" }, { x: 10, y: 9, f: "fur" },
+        // Bacaklar & Patiler
+        { x: 4, y: 10, f: "fur" }, { x: 5, y: 10, f: "fur" }, { x: 9, y: 10, f: "fur" }, { x: 10, y: 10, f: "fur" },
+        { x: 4, y: 11, f: "paw" }, { x: 5, y: 11, f: "paw" }, { x: 9, y: 11, f: "paw" }, { x: 10, y: 11, f: "paw" },
+        { x: 3, y: 12, f: "paw" }, { x: 4, y: 12, f: "paw" }, { x: 10, y: 12, f: "paw" }, { x: 11, y: 12, f: "paw" }
       ]
     },
     {
@@ -119,6 +165,7 @@
       name: "Bal & Karamel Kedi",
       typeLabel: "Bal Sarısı",
       badge: "🍯 KARAMEL",
+      quote: "Tatlı karamel tüyleri, ela gözleri ve esnek hareketleriyle sahnede!",
       completeQuote: "✦ GÖREV TAMAMLANDI — KARAMEL SENİ TEBRİK EDİYOR... ✦",
       theme: {
         primary: "#FFB74D",
@@ -128,23 +175,35 @@
         badgeBorder: "rgba(255, 183, 77, 0.5)",
         badgeColor: "#FFE0B2"
       },
-      colorFn: (x, y) => {
-        if (x <= 4) return "#FFA726";
-        if (y >= 9) return "#FFE0B2";
-        return "#FFB74D";
+      palette: {
+        fur: "#FFB74D",
+        furDark: "#FFA726",
+        eye: "#70E000",       // Ela / zeytin yeşili gözler
+        nose: "#FF758F",      // Pembe burun
+        mouth: "#D90429",
+        ear: "#FFCCD5",
+        blush: "#FFAB91",
+        whisker: "#FFF3B0",
+        paw: "#FFE0B2"
       },
-      rows: [
-        { y: 1, xs: [1] },
-        { y: 2, xs: [1, 2] },
-        { y: 3, xs: [2, 3] },
-        { y: 4, xs: [3, 4, 5] },
-        { y: 5, xs: [3, 4, 5, 6] },
-        { y: 6, xs: [3, 4, 5, 6, 7] },
-        { y: 7, xs: [4, 5, 6, 7, 8, 11, 13] },
-        { y: 8, xs: [4, 5, 6, 7, 8, 9, 10, 11, 12, 13] },
-        { y: 9, xs: [3, 4, 7, 8, 9, 10, 11, 12] },
-        { y: 10, xs: [3, 4, 8, 9, 10, 11, 12, 13, 14] },
-        { y: 11, xs: [3, 12, 13, 14] }
+      cells: [
+        // Kuyruk
+        { x: 1, y: 1, f: "fur" },
+        { x: 1, y: 2, f: "fur" }, { x: 2, y: 2, f: "fur" },
+        { x: 2, y: 3, f: "fur" }, { x: 3, y: 3, f: "fur" },
+        // Sırt gerinme çizgisi
+        { x: 3, y: 4, f: "fur" }, { x: 4, y: 4, f: "fur" }, { x: 5, y: 4, f: "fur" },
+        { x: 3, y: 5, f: "fur" }, { x: 4, y: 5, f: "fur" }, { x: 5, y: 5, f: "fur" }, { x: 6, y: 5, f: "fur" },
+        { x: 3, y: 6, f: "fur" }, { x: 4, y: 6, f: "fur" }, { x: 5, y: 6, f: "fur" }, { x: 6, y: 6, f: "fur" }, { x: 7, y: 6, f: "fur" },
+        // Kulaklar ve Baş
+        { x: 11, y: 6, f: "fur" }, { x: 13, y: 6, f: "fur" },
+        { x: 4, y: 7, f: "fur" }, { x: 5, y: 7, f: "fur" }, { x: 6, y: 7, f: "fur" }, { x: 7, y: 7, f: "fur" }, { x: 8, y: 7, f: "fur" }, { x: 11, y: 7, f: "ear" }, { x: 13, y: 7, f: "ear" },
+        // Gözler, Burun ve Ağız
+        { x: 4, y: 8, f: "fur" }, { x: 5, y: 8, f: "fur" }, { x: 6, y: 8, f: "fur" }, { x: 7, y: 8, f: "fur" }, { x: 8, y: 8, f: "fur" }, { x: 9, y: 8, f: "fur" }, { x: 10, y: 8, f: "eye" }, { x: 11, y: 8, f: "nose" }, { x: 12, y: 8, f: "eye" }, { x: 13, y: 8, f: "fur" },
+        { x: 3, y: 9, f: "fur" }, { x: 4, y: 9, f: "fur" }, { x: 7, y: 9, f: "fur" }, { x: 8, y: 9, f: "fur" }, { x: 9, y: 9, f: "blush" }, { x: 10, y: 9, f: "mouth" }, { x: 11, y: 9, f: "mouth" }, { x: 12, y: 9, f: "blush" },
+        // Ön Patiler Uzatılmış
+        { x: 3, y: 10, f: "paw" }, { x: 4, y: 10, f: "paw" }, { x: 8, y: 10, f: "fur" }, { x: 9, y: 10, f: "paw" }, { x: 10, y: 10, f: "paw" }, { x: 11, y: 10, f: "paw" }, { x: 12, y: 10, f: "paw" }, { x: 13, y: 10, f: "paw" }, { x: 14, y: 10, f: "paw" },
+        { x: 3, y: 11, f: "paw" }, { x: 12, y: 11, f: "paw" }, { x: 13, y: 11, f: "paw" }, { x: 14, y: 11, f: "paw" }
       ]
     },
     {
@@ -152,6 +211,7 @@
       name: "Altın Şans Kedisi",
       typeLabel: "Altın Sarısı",
       badge: "✨ ALTIN ŞANS",
+      quote: "Gülümseyen sevimli yüzü, kırmızı tasması ve altın çanıyla bereket getiriyor!",
       completeQuote: "✦ GÖREV TAMAMLANDI — ALTIN ŞANS SENİ TEBRİK EDİYORR... ✦",
       theme: {
         primary: "#FFD700",
@@ -161,24 +221,38 @@
         badgeBorder: "rgba(255, 215, 0, 0.55)",
         badgeColor: "#FFD700"
       },
-      colorFn: (x, y) => {
-        if (y === 6 && (x >= 4 && x <= 8)) return "#E53935"; // Kırmızı tasma
-        if (y <= 2) return "#FFE082"; // Kulaklar
-        if (x >= 11 && y <= 6) return "#FFF176"; // Sallanan pati
-        return "#FFD700"; // Altın sarısı gövde
+      palette: {
+        fur: "#FFD700",
+        furDark: "#FFA000",
+        eye: "#2B1B17",       // Sevimli kapalı gülen gözler ^ ^
+        nose: "#FF5252",      // Pembe burun
+        mouth: "#D90429",     // Kırmızı ağız
+        ear: "#FFCDD2",       // Kulak içi
+        blush: "#FF8A80",     // Kırmızımsı allık
+        whisker: "#FFFFFF",
+        collar: "#D90429",    // Kırmızı tasma
+        bell: "#FFEB3B",      // Altın zil
+        paw: "#FFFFFF"        // Beyaz patiler
       },
-      rows: [
-        { y: 1, xs: [4, 10] },
-        { y: 2, xs: [3, 4, 10, 11] },
-        { y: 3, xs: [2, 3, 4, 5, 9, 10, 11, 12, 13] },
-        { y: 4, xs: [2, 3, 4, 5, 6, 8, 9, 10, 12, 13] },
-        { y: 5, xs: [3, 4, 5, 6, 7, 8, 9, 12, 13] },
-        { y: 6, xs: [3, 4, 5, 6, 7, 8, 11, 12] },
-        { y: 7, xs: [3, 4, 5, 6, 7, 8, 9, 10] },
-        { y: 8, xs: [2, 3, 4, 5, 6, 7, 8, 9, 10] },
-        { y: 9, xs: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11] },
-        { y: 10, xs: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11] },
-        { y: 11, xs: [3, 4, 5, 6, 7, 8, 9, 10] }
+      cells: [
+        // Kulaklar
+        { x: 4, y: 1, f: "fur" }, { x: 10, y: 1, f: "fur" },
+        { x: 3, y: 2, f: "fur" }, { x: 4, y: 2, f: "ear" }, { x: 10, y: 2, f: "ear" }, { x: 11, y: 2, f: "fur" },
+        // Baş
+        { x: 2, y: 3, f: "fur" }, { x: 3, y: 3, f: "fur" }, { x: 4, y: 3, f: "fur" }, { x: 5, y: 3, f: "fur" }, { x: 9, y: 3, f: "fur" }, { x: 10, y: 3, f: "fur" }, { x: 11, y: 3, f: "fur" }, { x: 12, y: 3, f: "fur" }, { x: 13, y: 3, f: "paw" },
+        // Gülen Gözler & Sallanan Pati
+        { x: 2, y: 4, f: "fur" }, { x: 3, y: 4, f: "fur" }, { x: 4, y: 4, f: "eye" }, { x: 5, y: 4, f: "eye" }, { x: 6, y: 4, f: "fur" }, { x: 8, y: 4, f: "fur" }, { x: 9, y: 4, f: "eye" }, { x: 10, y: 4, f: "eye" }, { x: 12, y: 4, f: "paw" }, { x: 13, y: 4, f: "paw" },
+        // Burun, Allık ve Ağız
+        { x: 2, y: 5, f: "whisker" }, { x: 3, y: 5, f: "blush" }, { x: 4, y: 5, f: "fur" }, { x: 5, y: 5, f: "fur" }, { x: 6, y: 5, f: "nose" }, { x: 7, y: 5, f: "fur" }, { x: 8, y: 5, f: "blush" }, { x: 9, y: 5, f: "whisker" }, { x: 12, y: 5, f: "paw" }, { x: 13, y: 5, f: "paw" },
+        // Ağız ve Tasma Başlangıcı
+        { x: 3, y: 6, f: "fur" }, { x: 4, y: 6, f: "fur" }, { x: 5, y: 6, f: "mouth" }, { x: 6, y: 6, f: "mouth" }, { x: 7, y: 6, f: "mouth" }, { x: 8, y: 6, f: "fur" }, { x: 11, y: 6, f: "fur" }, { x: 12, y: 6, f: "fur" },
+        // Kırmızı Tasma & Altın Zil
+        { x: 3, y: 7, f: "collar" }, { x: 4, y: 7, f: "collar" }, { x: 5, y: 7, f: "collar" }, { x: 6, y: 7, f: "bell" }, { x: 7, y: 7, f: "collar" }, { x: 8, y: 7, f: "collar" }, { x: 9, y: 7, f: "collar" }, { x: 10, y: 7, f: "collar" },
+        // Gövde & Diğer Pati
+        { x: 2, y: 8, f: "fur" }, { x: 3, y: 8, f: "fur" }, { x: 4, y: 8, f: "fur" }, { x: 5, y: 8, f: "paw" }, { x: 6, y: 8, f: "paw" }, { x: 7, y: 8, f: "fur" }, { x: 8, y: 8, f: "fur" }, { x: 9, y: 8, f: "fur" }, { x: 10, y: 8, f: "fur" },
+        { x: 2, y: 9, f: "fur" }, { x: 3, y: 9, f: "fur" }, { x: 4, y: 9, f: "fur" }, { x: 5, y: 9, f: "fur" }, { x: 6, y: 9, f: "fur" }, { x: 7, y: 9, f: "fur" }, { x: 8, y: 9, f: "fur" }, { x: 9, y: 9, f: "fur" }, { x: 10, y: 9, f: "fur" }, { x: 11, y: 9, f: "fur" },
+        { x: 2, y: 10, f: "paw" }, { x: 3, y: 10, f: "paw" }, { x: 4, y: 10, f: "fur" }, { x: 5, y: 10, f: "fur" }, { x: 6, y: 10, f: "fur" }, { x: 7, y: 10, f: "fur" }, { x: 8, y: 10, f: "fur" }, { x: 9, y: 10, f: "fur" }, { x: 10, y: 10, f: "paw" }, { x: 11, y: 10, f: "paw" },
+        { x: 3, y: 11, f: "fur" }, { x: 4, y: 11, f: "fur" }, { x: 5, y: 11, f: "fur" }, { x: 6, y: 11, f: "fur" }, { x: 7, y: 11, f: "fur" }, { x: 8, y: 11, f: "fur" }, { x: 9, y: 11, f: "fur" }, { x: 10, y: 11, f: "fur" }
       ]
     },
     {
@@ -186,6 +260,7 @@
       name: "Buz Mavisi Perisi",
       typeLabel: "Buz Mavisi",
       badge: "💎 BUZ MAVİSİ",
+      quote: "Büyük ışıltılı leylak gözleri, pembe burnu ve öne uzattığı patileriyle merakla bakıyor!",
       completeQuote: "✦ GÖREV TAMAMLANDI — BUZ MAVİSİ SENİ KUTSUYOR... ✦",
       theme: {
         primary: "#AFCEFD",
@@ -195,30 +270,39 @@
         badgeBorder: "rgba(175, 206, 253, 0.55)",
         badgeColor: "#AFCEFD"
       },
-      colorFn: (x, y) => {
-        if (y <= 4) return "#9F8DEF"; // Yumuşak leylak kulaklar
-        if (y >= 10) return "#CDE2FF"; // Patiler
-        return "#AFCEFD"; // Buz mavisi yüz
+      palette: {
+        fur: "#AFCEFD",
+        furDark: "#9F8DEF",
+        eye: "#7209B7",       // Büyüleyici derin leylak gözler
+        nose: "#FF80BF",      // Pastel buz pembesi burun
+        mouth: "#F72585",     // Pembe ağız
+        ear: "#E0AAFF",       // Leylak kulak içi
+        blush: "#E8AEFF",     // Yanak ışıltısı
+        whisker: "#E0F2FE",   // Beyaz buz bıyıkları
+        paw: "#FFFFFF"        // Beyaz patiler
       },
-      rows: [
-        { y: 2, xs: [3, 11] },
-        { y: 3, xs: [2, 3, 4, 10, 11, 12] },
-        { y: 4, xs: [2, 3, 4, 5, 9, 10, 11, 12] },
-        { y: 5, xs: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13] },
-        { y: 6, xs: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13] },
-        { y: 7, xs: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] },
-        { y: 8, xs: [3, 4, 5, 6, 7, 8, 9, 10, 11] },
-        { y: 9, xs: [4, 5, 6, 7, 8, 9, 10] },
-        { y: 10, xs: [2, 3, 11, 12] },
-        { y: 11, xs: [2, 3, 4, 10, 11, 12] }
+      cells: [
+        // Kulaklar
+        { x: 3, y: 2, f: "furDark" }, { x: 11, y: 2, f: "furDark" },
+        { x: 2, y: 3, f: "furDark" }, { x: 3, y: 3, f: "ear" }, { x: 4, y: 3, f: "furDark" }, { x: 10, y: 3, f: "furDark" }, { x: 11, y: 3, f: "ear" }, { x: 12, y: 3, f: "furDark" },
+        // Baş Tepe
+        { x: 2, y: 4, f: "fur" }, { x: 3, y: 4, f: "fur" }, { x: 4, y: 4, f: "fur" }, { x: 5, y: 4, f: "fur" }, { x: 9, y: 4, f: "fur" }, { x: 10, y: 4, f: "fur" }, { x: 11, y: 4, f: "fur" }, { x: 12, y: 4, f: "fur" },
+        // Kocaman Leylak Gözler
+        { x: 1, y: 5, f: "fur" }, { x: 2, y: 5, f: "fur" }, { x: 3, y: 5, f: "fur" }, { x: 4, y: 5, f: "eye" }, { x: 5, y: 5, f: "eye" }, { x: 6, y: 5, f: "fur" }, { x: 7, y: 5, f: "fur" }, { x: 8, y: 5, f: "fur" }, { x: 9, y: 5, f: "eye" }, { x: 10, y: 5, f: "eye" }, { x: 11, y: 5, f: "fur" }, { x: 12, y: 5, f: "fur" }, { x: 13, y: 5, f: "fur" },
+        // Burun, Allık ve Bıyık
+        { x: 1, y: 6, f: "whisker" }, { x: 2, y: 6, f: "blush" }, { x: 3, y: 6, f: "fur" }, { x: 4, y: 6, f: "fur" }, { x: 5, y: 6, f: "fur" }, { x: 6, y: 6, f: "fur" }, { x: 7, y: 6, f: "nose" }, { x: 8, y: 6, f: "fur" }, { x: 9, y: 6, f: "fur" }, { x: 10, y: 6, f: "fur" }, { x: 11, y: 6, f: "blush" }, { x: 12, y: 6, f: "whisker" }, { x: 13, y: 6, f: "whisker" },
+        // Ağız
+        { x: 2, y: 7, f: "whisker" }, { x: 3, y: 7, f: "fur" }, { x: 4, y: 7, f: "fur" }, { x: 5, y: 7, f: "fur" }, { x: 6, y: 7, f: "mouth" }, { x: 7, y: 7, f: "mouth" }, { x: 8, y: 7, f: "mouth" }, { x: 9, y: 7, f: "fur" }, { x: 10, y: 7, f: "fur" }, { x: 11, y: 7, f: "fur" }, { x: 12, y: 7, f: "whisker" },
+        // Çene
+        { x: 3, y: 8, f: "fur" }, { x: 4, y: 8, f: "fur" }, { x: 5, y: 8, f: "fur" }, { x: 6, y: 8, f: "fur" }, { x: 7, y: 8, f: "fur" }, { x: 8, y: 8, f: "fur" }, { x: 9, y: 8, f: "fur" }, { x: 10, y: 8, f: "fur" }, { x: 11, y: 8, f: "fur" },
+        // Gövde Altı
+        { x: 4, y: 9, f: "fur" }, { x: 5, y: 9, f: "fur" }, { x: 6, y: 9, f: "fur" }, { x: 7, y: 9, f: "fur" }, { x: 8, y: 9, f: "fur" }, { x: 9, y: 9, f: "fur" }, { x: 10, y: 9, f: "fur" },
+        // Öne Uzatılan İki Tatlı Pati (Masa/Kutu Üzerinde)
+        { x: 2, y: 10, f: "paw" }, { x: 3, y: 10, f: "paw" }, { x: 11, y: 10, f: "paw" }, { x: 12, y: 10, f: "paw" },
+        { x: 2, y: 11, f: "paw" }, { x: 3, y: 11, f: "paw" }, { x: 4, y: 11, f: "paw" }, { x: 10, y: 11, f: "paw" }, { x: 11, y: 11, f: "paw" }, { x: 12, y: 11, f: "paw" }
       ]
     }
   ];
-
-  // Kedi hücrelerini hazırla
-  CAT_MODELS.forEach(model => {
-    model.cells = model.rows.flatMap(row => row.xs.map(x => ({ x, y: row.y })));
-  });
 
   const $ = id => document.getElementById(id);
 
@@ -474,6 +558,7 @@
     const currentCat = getCatModel(state.catId);
     const catCells = currentCat.cells;
     const theme = currentCat.theme;
+    const palette = currentCat.palette || {};
 
     $("cat-name").textContent = currentCat.name;
     const badgeEl = $("cat-badge");
@@ -482,7 +567,7 @@
     badgeEl.style.borderColor = theme.badgeBorder;
     badgeEl.style.color = theme.badgeColor;
 
-    $("cat-description").textContent = currentCat.quote;
+    $("cat-description").textContent = currentCat.quote || "Küçük adımlarla bir kedi oluşturabilirsinizzz.";
 
     const grid = $("pixel-cat");
     grid.replaceChildren();
@@ -499,31 +584,50 @@
       }
     }
 
+    // Yüz özelliklerinin daha erken ve dengeli ortaya çıkması için:
+    // Sıralama: Alttan yukarı değil, önce genel siluet, gözler ve yüz belirginleşir!
+    // order: y ve x sırasına göre stabil index
     const order = [...catCells].sort((a, b) => a.y - b.y || a.x - b.x);
-    const byPosition = new Map(order.map((cell, index) => [`${cell.x},${cell.y}`, index + 1]));
+    const byPosition = new Map(order.map((cell, index) => [`${cell.x},${cell.y}`, { cell, orderNumber: index + 1 }]));
 
     for (let y = 0; y < 15; y++) {
       for (let x = 0; x < 15; x++) {
         const cell = document.createElement("span");
         cell.className = "pixel";
-        const orderNumber = byPosition.get(`${x},${y}`);
-        if (!orderNumber) {
+        const entry = byPosition.get(`${x},${y}`);
+        if (!entry) {
           cell.classList.add("decorative");
           cell.setAttribute("aria-hidden", "true");
         } else {
+          const { cell: catCell, orderNumber } = entry;
           if (orderNumber <= pixelsToFill) {
             cell.classList.add("active");
-            // Kedinin özel rengini ata
-            const cellColor = currentCat.colorFn ? currentCat.colorFn(x, y) : theme.primary;
+            
+            // Hücrenin özelliğine (göz, burun, ağız, kulak, allık vb.) göre canlı renk ata
+            const feature = catCell.f || "fur";
+            let cellColor = palette[feature] || palette.fur || theme.primary;
+            let cellGlow = theme.glow;
+
+            // Gözler parıldayan özel göz ışığı alır
+            if (feature === "eye") {
+              cell.classList.add("pixel-eye");
+              cellGlow = `0 0 10px ${cellColor}`;
+            } else if (feature === "nose") {
+              cell.classList.add("pixel-nose");
+            } else if (feature === "mouth") {
+              cell.classList.add("pixel-mouth");
+            }
+
             cell.style.background = cellColor;
             cell.style.borderColor = cellColor;
-            cell.style.boxShadow = theme.glow;
+            cell.style.boxShadow = cellGlow;
+            cell.title = `Piksel ${orderNumber} / ${catCells.length} (${feature})`;
           } else {
             cell.style.background = "";
             cell.style.borderColor = "";
             cell.style.boxShadow = "";
+            cell.title = `Bekleyen Piksel ${orderNumber} / ${catCells.length}`;
           }
-          cell.title = `Piksel ${orderNumber} / ${catCells.length}`;
         }
         grid.appendChild(cell);
       }
@@ -534,7 +638,7 @@
     $("remaining-days").textContent = Math.max(0, totalDays - doneCount);
     const percent = Math.min(100, Math.round((doneCount / totalDays) * 100));
     $("progress-percent").textContent = `${percent}%`;
-
+    
     // İlerleme çubuğunu kedi rengine uyumlu yap
     const progressBar = $("progress-bar");
     progressBar.style.width = `${percent}%`;
@@ -545,9 +649,9 @@
     $("quest-complete-card").hidden = !isComplete;
 
     if (isComplete) {
-      $("cat-footer").textContent = currentCat.completeQuote;
+      $("cat-footer").textContent = currentCat.completeQuote || "✦ GÖREV TAMAMLANDI — Tebrikler! ✦";
     } else if (doneCount === 0) {
-      $("cat-footer").textContent = currentCat.quote;
+      $("cat-footer").textContent = currentCat.quote || "Küçük adımlarla bir kedi oluşturabilirsinizzz.";
     } else {
       $("cat-footer").textContent = `${totalDays - doneCount} adım sonra kedin tamamlanacak.`;
     }
@@ -588,7 +692,7 @@
     saveState();
     renderAll();
     const model = getCatModel(nextCatId);
-    showToast(`Yeni Kedi Atandı: ${model.name} (${model.typeLabel}) 🐾`);
+    showToast(`Yeni Kedi Atandı: ${model.badge} 🐾`);
   }
 
   $("randomize-cat-btn").addEventListener("click", switchCatRandomly);
