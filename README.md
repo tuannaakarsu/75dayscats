@@ -7,6 +7,7 @@
 - **Rastgele & Farklı Kedi Modelleri:** 6 farklı piksel kedi modeli (Klasik Oturan, Kıvrılmış Uyuyan, Yürüyen Gezgin, Gerinen Yoga Kedisi, Şans Kedisi Maneki-neko, Meraklı Kedi). Bir kedi tamamlandığında yeni bir serüvene başka bir kediyle başlanır.
 - **Tek Tıkla Rastgele Kedi Değiştirme:** Arayüzden ya da ayarlardan dilediğin zaman farklı bir kedi modeline geçiş yapabilirsin.
 - **Arkadaşına Gönder / Paylaşım:** "🔗 Arkadaşına Gönder" butonuyla link paylaş; arkadaşın linke tıkladığında ona rastgele farklı bir kedi atanır!
+- **Gün Gün Bağımsız Hedefler:** Bazı günlere özel ekstra yapılacaklar ekleyebilirsin. Bir güne yeni hedef eklemek veya silmek diğer günleri ve geçmişte kazanılan pikselleri kesinlikle sıfırlamaz.
 - **Dinamik Piksel Ölçekleme:** Meydan okuma kaç gün sürerse sürsün (ister 14 gün, ister 30, ister 75 gün), pikseller orantılı olarak her gün adım adım açılır ve son gün kedi tamamlanır.
 
 ## Yerelde Çalıştırma

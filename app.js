@@ -362,11 +362,12 @@
     const catId = options.catId || getRandomCatId(options.excludeCatId);
 
     return {
-      version: 2,
+      version: 3,
       startDate: startDate,
       endDate: endDate,
       catId: catId,
       tasks: DEFAULT_TASKS.map(task => ({ ...task })),
+      dayTasks: {},
       completed: {},
       notes: {}
     };
@@ -394,15 +395,37 @@
       const startDate = parsed.startDate;
       const endDate = parsed.endDate || localDateString(addDays(parseDate(startDate), 74));
       const catId = parsed.catId && CAT_MODELS.some(m => m.id === parsed.catId) ? parsed.catId : getRandomCatId();
+      const baseTasks = parsed.tasks.map(t => ({ id: String(t.id), name: String(t.name) }));
+      const completed = parsed.completed && typeof parsed.completed === "object" ? parsed.completed : {};
+      const notes = parsed.notes && typeof parsed.notes === "object" ? parsed.notes : {};
+
+      // dayTasks yükle ve eski kullanıcılar için güvenli geçiş yap
+      let dayTasks = {};
+      if (parsed.dayTasks && typeof parsed.dayTasks === "object") {
+        for (const [k, list] of Object.entries(parsed.dayTasks)) {
+          if (Array.isArray(list)) {
+            dayTasks[k] = list.map(t => ({ id: String(t.id), name: String(t.name) }));
+          }
+        }
+      } else {
+        // Eski sürümden gelen kullanıcılar: Geçmişte tamamlanan günlerin hedeflerini kilitle,
+        // böylece yeni eklenen hedefler eski günlerin pikselini kesinlikle sıfırlamaz!
+        for (const [k, compList] of Object.entries(completed)) {
+          if (Array.isArray(compList) && compList.length > 0) {
+            dayTasks[k] = baseTasks.map(t => ({ ...t }));
+          }
+        }
+      }
 
       return {
-        version: 2,
+        version: 3,
         startDate: startDate,
         endDate: endDate,
         catId: catId,
-        tasks: parsed.tasks.map(t => ({ id: String(t.id), name: String(t.name) })),
-        completed: parsed.completed && typeof parsed.completed === "object" ? parsed.completed : {},
-        notes: parsed.notes && typeof parsed.notes === "object" ? parsed.notes : {}
+        tasks: baseTasks,
+        dayTasks: dayTasks,
+        completed: completed,
+        notes: notes
       };
     } catch (error) {
       console.warn("Kayıtlar okunamadı; yeni bir başlangıç oluşturuluyor.", error);
@@ -451,10 +474,30 @@
     return Array.isArray(list) ? list : [];
   }
 
+  function getTasksForDay(day) {
+    const key = dayKey(day);
+    if (state.dayTasks && Array.isArray(state.dayTasks[key])) {
+      return state.dayTasks[key];
+    }
+    return (state.tasks || []).map(t => ({ ...t }));
+  }
+
+  function ensureDayTasks(day) {
+    const key = dayKey(day);
+    if (!state.dayTasks || typeof state.dayTasks !== "object") {
+      state.dayTasks = {};
+    }
+    if (!Array.isArray(state.dayTasks[key])) {
+      state.dayTasks[key] = (state.tasks || []).map(t => ({ ...t }));
+    }
+    return state.dayTasks[key];
+  }
+
   function isDayComplete(day) {
-    if (state.tasks.length === 0) return false;
+    const tasks = getTasksForDay(day);
+    if (tasks.length === 0) return false;
     const done = new Set(completedIds(day));
-    return state.tasks.every(task => done.has(task.id));
+    return tasks.every(task => done.has(task.id));
   }
 
   function completedDayCount() {
@@ -479,20 +522,81 @@
     }, 2400);
   }
 
+  // Görev Silme Modalı İşlemleri
+  const deleteDialog = $("delete-task-dialog");
+  let taskPendingDelete = null;
+
+  function openDeleteTaskDialog(task) {
+    taskPendingDelete = task;
+    $("delete-task-name").textContent = task.name;
+    $("delete-today-btn").textContent = `Sadece ${selectedDay}. Günden Sil`;
+    deleteDialog.showModal();
+  }
+
+  $("delete-today-btn").addEventListener("click", () => {
+    if (!taskPendingDelete) return;
+    const dayList = ensureDayTasks(selectedDay);
+    state.dayTasks[dayKey(selectedDay)] = dayList.filter(t => t.id !== taskPendingDelete.id);
+    const key = dayKey(selectedDay);
+    if (state.completed[key]) {
+      state.completed[key] = state.completed[key].filter(id => id !== taskPendingDelete.id);
+    }
+    saveState();
+    renderAll();
+    deleteDialog.close();
+    showToast(`"${taskPendingDelete.name}" sadece ${selectedDay}. günden silindi.`);
+    taskPendingDelete = null;
+  });
+
+  $("delete-all-days-btn").addEventListener("click", () => {
+    if (!taskPendingDelete) return;
+    const targetId = taskPendingDelete.id;
+    const targetName = taskPendingDelete.name;
+
+    // Şablondan sil
+    state.tasks = state.tasks.filter(t => t.id !== targetId);
+
+    // Günlük listelerden sil
+    if (state.dayTasks) {
+      for (const k of Object.keys(state.dayTasks)) {
+        state.dayTasks[k] = state.dayTasks[k].filter(t => t.id !== targetId);
+      }
+    }
+
+    // Tamamlananlardan sil
+    if (state.completed) {
+      for (const k of Object.keys(state.completed)) {
+        state.completed[k] = state.completed[k].filter(id => id !== targetId);
+      }
+    }
+
+    saveState();
+    renderAll();
+    deleteDialog.close();
+    showToast(`"${targetName}" tüm günlerden silindi.`);
+    taskPendingDelete = null;
+  });
+
+  $("delete-cancel-btn").addEventListener("click", () => {
+    taskPendingDelete = null;
+    deleteDialog.close();
+  });
+
   function renderTasks() {
     const container = $("task-list");
     container.replaceChildren();
+    const currentTasks = getTasksForDay(selectedDay);
     const done = new Set(completedIds(selectedDay));
-    $("task-count").textContent = `${state.tasks.filter(task => done.has(task.id)).length} / ${state.tasks.length}`;
+    $("task-count").textContent = `${currentTasks.filter(task => done.has(task.id)).length} / ${currentTasks.length}`;
 
-    if (state.tasks.length === 0) {
+    if (currentTasks.length === 0) {
       const empty = document.createElement("div");
       empty.className = "empty-state";
-      empty.textContent = "Henüz hedef yok. Yukarıdan ilk hedefini ekle.";
+      empty.textContent = "Bu gün için henüz hedef yok. Aşağıdan yeni bir hedef ekleyebilirsin.";
       container.appendChild(empty);
     }
 
-    state.tasks.forEach(task => {
+    currentTasks.forEach(task => {
       const row = document.createElement("div");
       row.className = "task-item" + (done.has(task.id) ? " done" : "");
       const checkbox = document.createElement("input");
@@ -514,7 +618,9 @@
         if (next === null) return;
         const trimmed = next.trim();
         if (!trimmed) { alert("Hedef adı boş olamaz."); return; }
-        task.name = trimmed.slice(0, 80);
+        const dayList = ensureDayTasks(selectedDay);
+        const item = dayList.find(t => t.id === task.id);
+        if (item) item.name = trimmed.slice(0, 80);
         saveState(); renderAll();
       };
       name.addEventListener("click", edit);
@@ -527,14 +633,7 @@
       remove.type = "button";
       remove.textContent = "×";
       remove.setAttribute("aria-label", task.name + " hedefini sil");
-      remove.addEventListener("click", () => {
-        if (!confirm(`"${task.name}" hedefini tüm listeden silmek istiyor musun?`)) return;
-        state.tasks = state.tasks.filter(item => item.id !== task.id);
-        for (const key of Object.keys(state.completed)) {
-          state.completed[key] = state.completed[key].filter(id => id !== task.id);
-        }
-        saveState(); renderAll();
-      });
+      remove.addEventListener("click", () => openDeleteTaskDialog(task));
       row.append(checkbox, name, remove);
       container.appendChild(row);
     });
@@ -677,6 +776,26 @@
     $("daily-note").disabled = selectedDay > todayNum;
     $("add-task-form").querySelector("input").disabled = selectedDay > todayNum;
     $("add-task-form").querySelector("button").disabled = selectedDay > todayNum;
+
+    const addToAll = $("add-to-all-days");
+    const scopeInfo = $("task-scope-info");
+    if (scopeInfo) {
+      scopeInfo.textContent = (addToAll && addToAll.checked)
+        ? "Bugün ve sonraki günlere eklenir"
+        : `Sadece ${selectedDay}. güne eklenir`;
+    }
+  }
+
+  const addToAllCheckbox = $("add-to-all-days");
+  if (addToAllCheckbox) {
+    addToAllCheckbox.addEventListener("change", () => {
+      const scopeInfo = $("task-scope-info");
+      if (scopeInfo) {
+        scopeInfo.textContent = addToAllCheckbox.checked
+          ? "Bugün ve sonraki günlere eklenir"
+          : `Sadece ${selectedDay}. güne eklenir`;
+      }
+    });
   }
 
   function renderAll() {
@@ -723,10 +842,44 @@
     const input = $("new-task");
     const name = input.value.trim();
     if (!name) return;
-    if (state.tasks.length >= 20) { alert("En fazla 20 hedef ekleyebilirsin."); return; }
-    state.tasks.push({ id: makeId(), name: name.slice(0, 80) });
+
+    const currentTasks = getTasksForDay(selectedDay);
+    if (currentTasks.length >= 25) { alert("Bir gün için en fazla 25 hedef ekleyebilirsin."); return; }
+
+    const forAllCheckbox = $("add-to-all-days");
+    const forAll = forAllCheckbox ? forAllCheckbox.checked : false;
+
+    const newId = makeId();
+    const newTask = { id: newId, name: name.slice(0, 80) };
+
+    if (forAll) {
+      // Şablona ekle (böylece gelecekteki özelleştirilmemiş günler de bu görevi alır)
+      state.tasks.push({ ...newTask });
+
+      // Seçili güne ekle
+      const todayList = ensureDayTasks(selectedDay);
+      todayList.push({ ...newTask });
+
+      // Seçili günden sonraki günlerin özelleştirilmiş listeleri varsa onlara da ekle
+      // (Geçmiş tamamlanmış günlere ASLA eklenmez, böylece eski pikseller %100 güvendedir!)
+      const totalDays = getTotalDays();
+      for (let d = selectedDay + 1; d <= totalDays; d++) {
+        const k = dayKey(d);
+        if (state.dayTasks && state.dayTasks[k]) {
+          state.dayTasks[k].push({ ...newTask });
+        }
+      }
+      showToast(`"${newTask.name}" bugün ve sonraki günlere eklendi 📅`);
+    } else {
+      // Sadece bu güne ekle! Geçmiş veya gelecek günleri kesinlikle etkilemez!
+      const dayList = ensureDayTasks(selectedDay);
+      dayList.push(newTask);
+      showToast(`"${newTask.name}" sadece ${selectedDay}. güne eklendi ✍️`);
+    }
+
     input.value = "";
-    saveState(); renderAll();
+    saveState();
+    renderAll();
   });
 
   $("prev-day").addEventListener("click", () => {
@@ -776,10 +929,73 @@
     }
   }
 
+  // Şablon Hedefler (Ayarlar İçinde)
+  function renderTemplateTasks() {
+    const list = $("template-tasks-list");
+    if (!list) return;
+    list.replaceChildren();
+
+    if (state.tasks.length === 0) {
+      const empty = document.createElement("div");
+      empty.className = "empty-state";
+      empty.textContent = "Henüz varsayılan hedef yok. Aşağıdan ekleyebilirsin.";
+      list.appendChild(empty);
+      return;
+    }
+
+    state.tasks.forEach(task => {
+      const item = document.createElement("div");
+      item.className = "template-task-item";
+
+      const name = document.createElement("span");
+      name.textContent = task.name;
+
+      const del = document.createElement("button");
+      del.type = "button";
+      del.className = "template-task-del";
+      del.textContent = "×";
+      del.title = "Şablondan kaldır";
+      del.addEventListener("click", () => {
+        if (state.tasks.length <= 1) {
+          alert("En az bir varsayılan hedef bulunmalıdır.");
+          return;
+        }
+        state.tasks = state.tasks.filter(t => t.id !== task.id);
+        saveState();
+        renderTemplateTasks();
+        renderAll();
+        showToast(`"${task.name}" varsayılan şablondan çıkarıldı.`);
+      });
+
+      item.append(name, del);
+      list.appendChild(item);
+    });
+  }
+
+  const addTemplateBtn = $("add-template-task-btn");
+  if (addTemplateBtn) {
+    addTemplateBtn.addEventListener("click", () => {
+      const input = $("new-template-task");
+      const name = input.value.trim();
+      if (!name) return;
+      if (state.tasks.length >= 20) {
+        alert("En fazla 20 varsayılan hedef belirleyebilirsin.");
+        return;
+      }
+      state.tasks.push({ id: makeId(), name: name.slice(0, 80) });
+      input.value = "";
+      saveState();
+      renderTemplateTasks();
+      renderAll();
+      showToast(`"${name}" varsayılan hedeflere eklendi.`);
+    });
+  }
+
   $("settings-open").addEventListener("click", () => {
     $("start-date").value = state.startDate;
     $("end-date").value = state.endDate;
     populateCatSelect();
+    renderTemplateTasks();
     updateDurationPreview();
     dialog.showModal();
   });
@@ -869,12 +1085,21 @@
           alert("Geçersiz yedek dosyası formatı.");
           return;
         }
+        let importedDayTasks = {};
+        if (imported.dayTasks && typeof imported.dayTasks === "object") {
+          for (const [k, list] of Object.entries(imported.dayTasks)) {
+            if (Array.isArray(list)) {
+              importedDayTasks[k] = list.map(t => ({ id: String(t.id), name: String(t.name) }));
+            }
+          }
+        }
         state = {
-          version: 2,
+          version: 3,
           startDate: imported.startDate,
           endDate: imported.endDate || localDateString(addDays(parseDate(imported.startDate), 74)),
           catId: imported.catId && CAT_MODELS.some(m => m.id === imported.catId) ? imported.catId : getRandomCatId(),
           tasks: imported.tasks.map(t => ({ id: String(t.id), name: String(t.name) })),
+          dayTasks: importedDayTasks,
           completed: imported.completed && typeof imported.completed === "object" ? imported.completed : {},
           notes: imported.notes && typeof imported.notes === "object" ? imported.notes : {}
         };

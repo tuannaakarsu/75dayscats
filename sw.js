@@ -1,4 +1,4 @@
-const CACHE_NAME = "pixel-cat-v4";
+const CACHE_NAME = "pixel-cat-v5";
 const APP_SHELL = [
   "./",
   "./index.html",

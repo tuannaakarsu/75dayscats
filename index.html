@@ -57,6 +57,13 @@
         <input id="new-task" maxlength="80" placeholder="Yeni bir hedef ekle..." autocomplete="off" required>
         <button type="submit" class="add-button" aria-label="Hedef ekle">+</button>
       </form>
+      <div class="add-task-options">
+        <label class="scope-checkbox-label" for="add-to-all-days">
+          <input type="checkbox" id="add-to-all-days">
+          <span>Her güne kalıcı ekle</span>
+        </label>
+        <span class="scope-badge" id="task-scope-info">Sadece bu güne eklenir</span>
+      </div>
       <p class="hint" id="completion-hint">Günün pikselini açmak için tüm hedefleri tamamla.</p>
       <div id="day-complete-message" class="success-message" hidden>✦ BUGÜNÜN PİKSELİ KAZANILDI ✦</div>
     </section>
@@ -169,9 +176,13 @@
       </div>
 
       <div class="setting-group">
-        <label>Başlangıç hedefleri</label>
-        <p class="hint">Hedef ekleyebilir, silebilir veya isimlerini düzenleyebilirsin. Bir günün pikseli, o gün için
-          listedeki bütün hedefler tamamlandığında açılır.</p>
+        <label>Varsayılan Hedefler (Şablon)</label>
+        <p class="hint">Yeni bir gün başladığında otomatik listelenecek temel hedefler:</p>
+        <div id="template-tasks-list" class="template-tasks-list"></div>
+        <div class="template-add-row">
+          <input id="new-template-task" maxlength="80" placeholder="Yeni varsayılan hedef..." autocomplete="off">
+          <button type="button" id="add-template-task-btn" class="action-chip" aria-label="Şablona ekle">+ Ekle</button>
+        </div>
       </div>
 
       <div class="setting-group backup-section">
@@ -216,6 +227,26 @@
       </div>
       <button type="button" id="native-share-btn" class="secondary-button" hidden>Uygulamalarla Paylaş 📲</button>
       <p class="share-copied-toast" id="share-copied-toast" hidden>✓ Bağlantı panoya kopyalandı!</p>
+    </div>
+  </dialog>
+
+  <!-- Görev Silme Seçim Modalı -->
+  <dialog id="delete-task-dialog" class="settings-dialog delete-dialog">
+    <form method="dialog" class="dialog-header">
+      <div>
+        <p class="eyebrow">HEDEFİ SİL</p>
+        <h2>Hedefi Kaldır</h2>
+      </div>
+      <button class="icon-button" aria-label="Kapat">×</button>
+    </form>
+    <div class="settings-content">
+      <p class="delete-dialog-msg">"<strong id="delete-task-name"></strong>" hedefini nasıl silmek istiyorsun?</p>
+      <div class="delete-dialog-actions">
+        <button type="button" id="delete-today-btn" class="primary-button delete-action-btn">Sadece Bu Günden Sil</button>
+        <button type="button" id="delete-all-days-btn" class="danger-button delete-action-btn">Tüm Günlerden Sil</button>
+        <button type="button" id="delete-cancel-btn" class="secondary-button delete-action-btn">Vazgeç</button>
+      </div>
+      <p class="hint">"Sadece Bu Günden Sil" seçeneği diğer günleri ve geçmişte kazandığın pikselleri kesinlikle etkilemez.</p>
     </div>
   </dialog>
 
